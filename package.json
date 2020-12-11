@@ -30,6 +30,7 @@
       "react-app/jest"
     ]
   },
+  "homepage": "https://www.tannguyendeveloper.com/robot_demo",
   "browserslist": {
     "production": [
       ">0.2%",

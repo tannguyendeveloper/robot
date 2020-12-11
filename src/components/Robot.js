@@ -55,7 +55,7 @@ const Robot = ({
     setTop(position.y);
     positionRef.current.style.transform = `rotate(${rotation}deg)`;
     if(winningPosition.x === initialPosition.x && winningPosition.y === initialPosition.y) {
-      setTimeout(()=>{alert('winner')}, 600);
+      setTimeout(()=>{handleWinGame()}, 600);
     }
   },[initialPosition, initialDirection, winningPosition, gameBoardRef])
 
