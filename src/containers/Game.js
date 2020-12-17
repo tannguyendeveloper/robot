@@ -13,6 +13,9 @@ import { Button } from 'antd';
 
 const Game = (props) => {  
   const gameBoardRef = useRef();
+  const robotRef = useRef();
+  const goalRef = useRef();
+
   const [ settings, setSettings ] = useState(props.settings);
   const [ showWinner, setShowWinner ] = useState(false);
   const [ showLoser, setShowLoser ] = useState(false);
@@ -21,8 +24,10 @@ const Game = (props) => {
   // initial position of the robot on the game grid
   const [robotPosition, setRobotPosition] = useState(null);
   const [robotDirection, setRobotDirection] = useState(null);
-  const [enableMovement, setMovement] = useState(false);
-  
+  const [rotation, setRotation] = useState(0); 
+  const [runCommands, setRunCommands] = useState(false);
+  const [commandIndex, setCommandIndex] = useState(0);
+
   // position of the goal
   const [goalPosition, setGoalPosition] = useState(null);
   
@@ -30,60 +35,190 @@ const Game = (props) => {
   const [disabledController, setDisabledController] = useState(true);
   const [commands, setCommands] = useState([]);
   
+  
   useEffect(() => {
     setSettings(props.settings);
   },[props.settings])
 
-  const startNewGame = () => {
+  const resetGame = () => {
+    updatePosition(robotRef,{x:0,y:0}, 0 ,0);
     setShowWinner(false);
     setShowLoser(false);
-    
-    setMovement(false)
+    setRotation(0);
+    setRunCommands(false);
+    setCommandIndex(0);
     setCommands([]);
+  }
+
+  const updatePosition = (ref, coordinates, rotation ,opacity = 1) => {
+    ref.current.style.left = `${coordinates.x}px`;
+    ref.current.style.top = `${coordinates.y}px`;
+    ref.current.style.opacity = 1;
+    ref.current.style.transform = `rotate(${rotation}deg)`;
+  }
+
+
+
+  const startNewGame = () => {
+    resetGame();
     // set robot position randomly on the grid
     const xPos = Math.floor(Math.random() * settings.gridWidth);
     const yPos = Math.floor(Math.random() * settings.gridHeight);
     setRobotPosition({x: xPos, y: yPos});
-
+    
+    const coordinates = getPosition({x: xPos, y: yPos});
     // set the intial direction the robot is facing
     const directions = ['N','S','E','W'];
     const index = Math.floor(Math.random() * directions.length);
     let initialDirection = directions[index];
     setRobotDirection(initialDirection);
+    let rotation;
+    switch(initialDirection) {
+      case "N":
+        rotation = 0;
+        break;
+      case "S":
+        rotation = 180;
+        break;
+      case "E":
+        rotation = 90;
+        break;
+      case "W":
+        rotation = 270;
+        break;
+      default:
+        rotation = 0;
+        break;  
+    }
+    setRotation(rotation);
+    updatePosition(robotRef, coordinates, rotation, 1);
 
     // set goal's position randomly on the grid
     const goalPosX = Math.floor(Math.random() * settings.gridWidth);
     const goalPosY = Math.floor(Math.random() * settings.gridHeight);
     setGoalPosition({x: goalPosX, y: goalPosY});
+    const goalCoordinates = getPosition({x: goalPosX, y: goalPosY});
+    updatePosition(goalRef, goalCoordinates, 0, 1);
 
     // set the game to start
     setGameStarted(true);
 
     // enable the controller
     setDisabledController(false);
-  }
+    console.log(coordinates);
+}
 
   const handleLoseGame = () => {
-    setMovement(false)
+    setRunCommands(false)
     setDisabledController(true);
     setShowLoser(true);
   }
 
   const handleWinGame = () => {
-    setMovement(false)
+    setRunCommands(false)
     setDisabledController(true);
     setShowWinner(true);
   }
 
+  const getPosition = ({x=0, y=0}) => {
+    // Referencing the game board
+    if (gameBoardRef.current) {
+      // Getting the columns (x axis of the game board)
+      const columns = [...gameBoardRef.current.children];
+      // Find the column with xAxis == X
+      console.log({x,y})
+      const column = columns.find(col => col.dataset.xAxis === String(x));
+      // x coordinate is not on grid
+      if(!column) return false;
+      const squares = [...column.childNodes];
+      // Find the square with the data-y
+      // Square is location we want mr robot to be placed
+      const square = squares.find(el => {
+        // convert DomStringMap into object;
+        let data = Object.assign({}, el.dataset);
+        return data.y === String(y);
+      })
+      // If square does not exist then that means Mr.Robot has stepped off the grid 
+      if(square) {
+        const pos = square.getBoundingClientRect();
+        let posX = (pos.left);
+        let posY = (pos.top);
+        return {x:posX, y:posY};
+      } else {
+        return false;
+      }
+    }
+  }
 
-  const startRobotMovement = () => {
-    // if commands are not empty
+  const startRunCommands = () => {
     if(commands.length) {
       setDisabledController(true);
-      setMovement(true)
+      setRunCommands(true)
     }
-    // disable all the buttons on the controller
   }
+
+  useEffect(() => {
+    if(runCommands) {
+      let command = commands[commandIndex];
+      let newPosition = robotPosition;
+      let newDirection = robotDirection;
+      let newRotation = rotation;
+
+      if(command === "F" && robotDirection === "N") {
+        newPosition.y++;
+      } else if(command === "F" && robotDirection === "S") {
+        newPosition.y--;
+      } else if(command === "F" && robotDirection === "E") {
+        newPosition.x++;
+      } else if(command === "F" && robotDirection === "W") {
+        newPosition.x--;
+      } else if(command === "L" && robotDirection === "N") {
+        newDirection = "W";
+        newRotation-=90;
+      } else if(command === "L" && robotDirection === "S") {
+        newDirection = "E";
+        newRotation-=90;
+      } else if(command === "L" && robotDirection === "E") {
+        newDirection = "N";
+        newRotation-=90;
+      } else if(command === "L" && robotDirection === "W") {
+        newDirection = "S";
+        newRotation-=90;
+      } else if(command === "R" && robotDirection === "N") {
+        newDirection = "E";
+        newRotation+=90;
+      } else if(command === "R" && robotDirection === "S") {
+        newDirection = "W";
+        newRotation+=90;
+      } else if(command === "R" && robotDirection === "E") {
+        newDirection = "S";
+        newRotation+=90;
+      } else if(command === "R" && robotDirection === "W") {
+        newDirection = "N";
+        newRotation+=90;
+      }
+
+      let coordinates = getPosition(newPosition);
+      if(!coordinates) handleLoseGame();
+      updatePosition(robotRef, coordinates, newRotation, 1)
+
+      setTimeout(() => {
+        // if we are not at the end of commands
+        if(commandIndex < commands.length - 1) {
+          if(newRotation !== rotation) setRotation(newRotation);
+          if(newDirection !== robotDirection) setRobotDirection(newDirection);
+          setCommandIndex(commandIndex+1);
+        } else {
+          // check for the winner
+          if(newPosition.x === goalPosition.x && newPosition.y === goalPosition.y) {
+            handleWinGame();
+          } else {
+            handleLoseGame();
+          }
+        }
+      }, 275)
+    }
+  },[runCommands, commandIndex]);
 
   const handleControllerButtonClick = (e) => {
     const command = e.currentTarget.value;
@@ -92,26 +227,12 @@ const Game = (props) => {
 
   return (
     <div className="game">
-
-      { gameStarted
-        ? <>
-            <GoalMarker
-              initialPosition={goalPosition}
-              gameBoardRef={gameBoardRef} 
-            />
-            <Robot 
-              initialPosition={robotPosition}
-              winningPosition={goalPosition}
-              enableMovement={enableMovement}
-              gameBoardRef={gameBoardRef} 
-              initialDirection={robotDirection}
-              handleLoseGame={handleLoseGame}
-              handleWinGame={handleWinGame}
-              commands={commands}
-            />
-          </>
-        : null
-      }
+      <GoalMarker
+        goalRef={goalRef}
+      />
+      <Robot 
+        robotRef={robotRef}
+      />
 
       { showWinner
         ? <WinnerModal
@@ -140,7 +261,7 @@ const Game = (props) => {
             disabled={disabledController}
             onReset={startNewGame}
             onClick={handleControllerButtonClick}
-            onSubmit={startRobotMovement}
+            onSubmit={startRunCommands}
           />
         </div>
       </div>

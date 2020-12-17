@@ -1,5 +1,5 @@
-import DirectionalButton from './DirectionalButton';
-import { Button } from 'antd';
+import DirectionalButton from "./DirectionalButton";
+import { Button } from "antd";
 
 const GameController = ({ disabled, onClick, onSubmit }) => {
   return (
@@ -32,7 +32,7 @@ const GameController = ({ disabled, onClick, onSubmit }) => {
             className="absolute"
             value="R"
             disabled={disabled}
-            />
+          />
         </span>
         <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2">
           <DirectionalButton
@@ -40,7 +40,8 @@ const GameController = ({ disabled, onClick, onSubmit }) => {
             title="Move backward"
             direction="down"
             className="absolute"
-            disabled value="B"
+            disabled
+            value="B"
           />
         </span>
       </div>
@@ -49,9 +50,11 @@ const GameController = ({ disabled, onClick, onSubmit }) => {
         className="mr-2"
         disabled={disabled}
         onClick={onSubmit}
-      >SUBMIT!</Button>
+      >
+        SUBMIT!
+      </Button>
     </div>
-  )
-}
+  );
+};
 
 export default GameController;
