@@ -26,7 +26,8 @@ const DirectionalButton = ({ direction, ...props }) => {
       {...props}
       shape="circle"
       type="primary"
-      className="inline-flex items-center align-center content-center justify-center justify-items-center"
+      className="inline-flex items-center align-center content-center justify-center justify-items-center
+        bg-cyan-aqua-600 hover:bg-cyan-aqua-400 focus:bg-cyan-aqua-400 focus:border-cyan-aqua-700 focus:text-cyan-aqua-700"
     >
       {icon(direction)}
     </Button>

@@ -6,7 +6,7 @@ const Synopsis = (props) => {
       footer={null}
       maskClosable={true}
       onCancel={props.onCancel}
-      title={<h2 className="font-Luckiest-Guy text-xl bold mb-2">Synopsis</h2>}
+      title={<h2 className="font-Luckiest-Guy text-2xl bold text-tulip-tree-600">Synopsis</h2>}
     >
       <p className="mb-3">
         Your old pal Mr. Robot's controller has a malfunction.

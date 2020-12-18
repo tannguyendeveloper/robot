@@ -3,8 +3,8 @@ import { Button } from "antd";
 
 const GameController = ({ disabled, handleDirectionalButtonClick, handleCommandClick }) => {
   return (
-    <div className="flex bg-gray-100 items-center justify-between game-controller border relative directional-buttons w-80 h-28 rounded-full">
-      <div className="border-2 border-box bg-white relative directional-buttons w-24 h-24 ml-2 rounded-full">
+    <div className="flex bg-gray-700 items-center justify-between game-controller border border-gray-500 relative directional-buttons w-80 h-28 rounded-full">
+      <div className="border-2 border-gray-600 border-box bg-gray-600 relative directional-buttons w-24 h-24 ml-2 rounded-full">
         <span className="absolute left-1 transform top-1/2 -translate-y-1/2">
           <DirectionalButton
             onClick={handleDirectionalButtonClick}
@@ -48,7 +48,9 @@ const GameController = ({ disabled, handleDirectionalButtonClick, handleCommandC
       <Button
         size="small"
         shape="round"
-        className="mr-2"
+        className="border-0 mr-2 
+          bg-cyan-aqua-600 hover:bg-cyan-aqua-400 focus:bg-cyan-aqua-600 
+          font-bold text-cyan-aqua-100 hover:text-white"
         disabled={disabled}
         onClick={handleCommandClick}
       >

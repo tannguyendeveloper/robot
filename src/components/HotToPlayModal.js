@@ -7,7 +7,7 @@ const HowToPlay = (props) => {
       footer={null}
       maskClosable={true}
       onCancel={props.onCancel}
-      title={<h2 className="font-Luckiest-Guy text-xl bold mb-2">How to play</h2>}
+      title={<h2 className="font-Luckiest-Guy text-2xl bold text-tulip-tree-600">How to play</h2>}
     >
       <p className="mb-3">
         At the start of a new game, Mr. Robot and his Goal are randomly placed

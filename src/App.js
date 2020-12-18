@@ -25,36 +25,35 @@ function App() {
     setSettings(values);
     setShowSettings(false);
   }
-
   return (
     <div className="App overflow-auto min-h-screen">
-      <div className="flex items-center content-center flex-col xs:mx-2 xs:flex-row xs:justify-between mb-3">
+      <div className="flex items-center content-center flex-col xs:mx-2 xs:flex-row xs:justify-between mb-3 md:max-w-3/4 lg:max-w-3/4">
         <h1 className="text-center font-Luckiest-Guy text-3xl md:text-4xl bold mt-3 mb-3 text-cyan-aqua-200">Mr. Robot</h1>
-        <div classNane="xs:-mx-5">
-        <Button
-          title="Read the Game's Synopsis"
-          children={'Synopsis'}
-          onClick={() => {setShowSynopsis(!showSynopsis)}}
-          className="mx-1"
-        />
+        <div className="">
+          <Button
+            title="Read the Game's Synopsis"
+            children={'Synopsis'}
+            onClick={() => {setShowSynopsis(!showSynopsis)}}
+            className="mx-1"
+          />
 
-        <Button
-          title="Read directions on How to Play"
-          children={'How to Play'}
-          onClick={() => {setShowHowToPlay(!showHowToPlay)}}
-          className="mx-1/2"
-        />
+          <Button
+            title="Read directions on How to Play"
+            children={'How to Play'}
+            onClick={() => {setShowHowToPlay(!showHowToPlay)}}
+            className="mx-1/2"
+          />
 
-        <Button
-          title="Change the game's settings"
-          children={'Show Game Settings'}
-          onClick={() => {setShowSettings(!showSettings)}}
-          disabled={isSettingsDisabled}
-          shape="circle"
-          className="ml-1 mr-0 inline-flex items-center align-center content-center justify-center justify-items-center"
-        >
-          <IoSettingsOutline />
-        </Button>
+          <Button
+            title="Change the game's settings"
+            children={'Show Game Settings'}
+            onClick={() => {setShowSettings(!showSettings)}}
+            disabled={isSettingsDisabled}
+            shape="circle"
+            className="ml-1 mr-0 inline-flex items-center align-center content-center justify-center justify-items-center"
+          >
+            <IoSettingsOutline />
+          </Button>
         </div>
       </div>
 

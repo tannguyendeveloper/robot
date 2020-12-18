@@ -7,7 +7,7 @@ import {
   IoCaretUp,
 } from "react-icons/io5";
 
-const CommandAvatar = ({ command, ...props }) => {
+const CommandAvatar = ({ command, isCurrentCommand, ...props }) => {
   const icon = (command) => {
     switch (command) {
       case "F":
@@ -22,19 +22,21 @@ const CommandAvatar = ({ command, ...props }) => {
         return <></>;
     }
   };
+  console.log(isCurrentCommand)
   return (
     <Avatar
       {...props}
       size={24}
-      className="
-        inline-flex 
+      className={`
+        inline-flex
         items-center
         align-center
         content-center
         justify-center
         justify-items-center
         mx-1
-        "
+        bg-cyan-aqua-${isCurrentCommand?700:500}
+        `}
       icon={icon(command)}
     />
   );
