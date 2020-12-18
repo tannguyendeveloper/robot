@@ -7,8 +7,7 @@ const WinnerModal = (props) => {
         maskClosable={true}
         onCancel={props.onCancel}
         onOk={props.onOk}
-        title={<h2 className="font-Arvo text-xl bold mb-2">You're a Winner Baby!!!</h2>}
-        cancelButtonProps={{ style: { display: 'none' } }}
+        title={<h2 className="font-Luckiest-Guy text-xl bold mb-2">You're a Winner Baby!!!</h2>}
       >
           You could pay again if you'd like
       </Modal>

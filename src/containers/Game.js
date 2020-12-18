@@ -11,7 +11,7 @@ import LoserModal from '../components/LoserModal';
 
 import { Button } from 'antd';
 
-const Game = (props) => {  
+const Game = ({setIsSettingsDisabled,...props}) => {
   const gameBoardRef = useRef();
   const robotRef = useRef();
   const goalRef = useRef();
@@ -42,24 +42,28 @@ const Game = (props) => {
 
   const resetGame = () => {
     updatePosition(robotRef,{x:0,y:0}, 0 ,0);
+    updatePosition(goalRef,{x:0,y:0}, 0 ,0);
     setShowWinner(false);
     setShowLoser(false);
     setRotation(0);
     setRunCommands(false);
     setCommandIndex(0);
     setCommands([]);
+    setShowLoser(false);
+    setShowWinner(false);
+    setIsSettingsDisabled(false);
+    setGameStarted(false);
   }
 
-  const updatePosition = (ref, coordinates, rotation ,opacity = 1) => {
+  const updatePosition = (ref, coordinates, rotation , opacity = 1) => {
     ref.current.style.left = `${coordinates.x}px`;
     ref.current.style.top = `${coordinates.y}px`;
-    ref.current.style.opacity = 1;
+    ref.current.style.opacity = opacity;
     ref.current.style.transform = `rotate(${rotation}deg)`;
   }
 
-
-
   const startNewGame = () => {
+    setIsSettingsDisabled(true);
     resetGame();
     // set robot position randomly on the grid
     const xPos = Math.floor(Math.random() * settings.gridWidth);
@@ -105,16 +109,17 @@ const Game = (props) => {
 
     // enable the controller
     setDisabledController(false);
-    console.log(coordinates);
-}
+  }
 
   const handleLoseGame = () => {
+    setIsSettingsDisabled(false);
     setRunCommands(false)
     setDisabledController(true);
     setShowLoser(true);
   }
 
   const handleWinGame = () => {
+    setIsSettingsDisabled(false);
     setRunCommands(false)
     setDisabledController(true);
     setShowWinner(true);
@@ -126,7 +131,6 @@ const Game = (props) => {
       // Getting the columns (x axis of the game board)
       const columns = [...gameBoardRef.current.children];
       // Find the column with xAxis == X
-      console.log({x,y})
       const column = columns.find(col => col.dataset.xAxis === String(x));
       // x coordinate is not on grid
       if(!column) return false;
@@ -150,7 +154,7 @@ const Game = (props) => {
     }
   }
 
-  const startRunCommands = () => {
+  const startRunningCommands = () => {
     if(commands.length) {
       setDisabledController(true);
       setRunCommands(true)
@@ -220,23 +224,18 @@ const Game = (props) => {
     }
   },[runCommands, commandIndex]);
 
-  const handleControllerButtonClick = (e) => {
+  const handleDirectionalButtonClick = (e) => {
     const command = e.currentTarget.value;
     setCommands([...commands,command])
   }
 
   return (
     <div className="game">
-      <GoalMarker
-        goalRef={goalRef}
-      />
-      <Robot 
-        robotRef={robotRef}
-      />
 
       { showWinner
         ? <WinnerModal
             onOk={startNewGame}
+            onCancel={resetGame}
             visible={showWinner}
           />
         : null }
@@ -244,41 +243,51 @@ const Game = (props) => {
       { showLoser
         ? <LoserModal
             onOk={startNewGame}
+            onCancel={resetGame}
             visible={showLoser}
           />
         : null }
 
 
-      <div className="flex w-2/3 mx-auto justify-around items-center">
-        <Grid
-          gameBoardRef={gameBoardRef}
-          width={props.settings.gridWidth}
-          height={props.settings.gridHeight}
-          enabled={gameStarted}
-        />
+      <div className="flex flex-col md:flex-row w-full xs:w-full md:w-3/4 lg:2/3 mx-auto mb-5 justify-around items-center">
+        <div className="my-2">
+          <Grid
+            gameBoardRef={gameBoardRef}
+            width={props.settings.gridWidth}
+            height={props.settings.gridHeight}
+            enabled={gameStarted}
+          />
+          <GoalMarker
+            goalRef={goalRef}
+          />
+          <Robot 
+            robotRef={robotRef}
+          />
+        </div>
         <div className="flex flex-col">
           <GameController
             disabled={disabledController}
-            onReset={startNewGame}
-            onClick={handleControllerButtonClick}
-            onSubmit={startRunCommands}
+            onResetGameClick={startNewGame}
+            onStartGameClick={startNewGame}
+            handleCommandClick={startRunningCommands}
+            handleDirectionalButtonClick={handleDirectionalButtonClick}
           />
         </div>
       </div>
 
-      <div className="flex w-1/2 my-5 mx-auto justify-around items-center">
+      <div className="flex w-full mx-5 md:w-3/4 lg:w-3/4 mx-auto justify-around items-center">
       {
         gameStarted
         ? <CommandsContainer commands={commands} />
         : <Button onClick={startNewGame} className="mt-2 mb-5">Start New Game!</Button>
       }
       </div>
-      <div className="w-1/2 my-5 mx-auto">
-          <h2 className="font-Arvo text-lg text-center bold mb-2">Game Controls</h2>
+      <div className="w-full md:w-3/4 lg:w-3/4 my-5 mx-auto">
+          <h2 className="font-Luckiest-Guy text-lg text-center bold mb-2 text-cyan-aqua-200">Game Controls</h2>
           <ul className="flex justify-between">
-            <li className="my-1 text-xs"><DirectionalButton direction="up" size="small"/> Move Mr. Robot forward</li>
-            <li className="my-1 text-xs"><DirectionalButton direction="left" size="small"/> Have Mr. Robot turn left</li>
-            <li className="my-1 text-xs"><DirectionalButton direction="right" size="small"/> Have Mr. Robot turn right</li>
+            <li className="my-1 text-xs xs:text-base text-cyan-aqua-100"><DirectionalButton direction="up" size="small"/> Move Mr. Robot forward</li>
+            <li className="my-1 text-xs xs:text-base text-cyan-aqua-100"><DirectionalButton direction="left" size="small"/> Have Mr. Robot turn left</li>
+            <li className="my-1 text-xs xs:text-base text-cyan-aqua-100"><DirectionalButton direction="right" size="small"/> Have Mr. Robot turn right</li>
           </ul>
       </div>
 

@@ -3,7 +3,7 @@ const Grid = ({ width = 0, height = 0, gameBoardRef }) => {
   const yAxis = [].concat([...Array(height).keys()]);
 
   return (
-    <div ref={gameBoardRef} className="border inline-flex w-auto">
+    <div ref={gameBoardRef} className="bg-white shadow-lg inline-flex w-auto">
       {yAxis.map((x) => {
         return (
           <div data-x-axis={x} key={`col-${x}`}>
@@ -22,9 +22,9 @@ const Grid = ({ width = 0, height = 0, gameBoardRef }) => {
                     w-8
                     ${
                       // Odd Colors
-                      (x + y) % 2 === 0 ? "bg-gray-100" : ""
+                      (x + y) % 2 === 0 ? "bg-cyan-aqua-200 text-cyan-aqua-700" : "bg-cyan-aqua-800 text-cyan-aqua-100 "
                     }
-                    text-gray-500 text-xs`}
+                    text-xs`}
                 >
                   {x},{y}
                 </div>

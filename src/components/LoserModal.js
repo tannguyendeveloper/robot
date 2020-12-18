@@ -7,8 +7,7 @@ const LoserModal = (props) => {
       maskClosable={true}
       onCancel={props.onCancel}
       onOk={props.onOk}
-      title={<h2 className="font-Arvo text-xl bold mb-2">You Lose!</h2>}
-      cancelButtonProps={{ style: { display: "none" } }}
+      title={<h2 className="font-Luckiest-Guy text-xl bold mb-2">You Lose!</h2>}
     >
       You should give it another shot.
     </Modal>

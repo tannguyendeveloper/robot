@@ -17,7 +17,7 @@ const RobotForm = (props) => {
         maskClosable={true}
         onOk={handleOk}
         onCancel={props.onCancel}
-        title={<h2 className="font-Arvo text-xl bold mb-2">Game Settings</h2>}
+        title={<h2 className="font-Luckiest-Guy text-xl bold mb-2">Game Settings</h2>}
       >
         <Form layout={layout} className="flex" initialValues={props.settings}>
             <Form.Item
